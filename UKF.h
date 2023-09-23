@@ -7,7 +7,6 @@
 class UKF {
 	public:
 	EkfModel model;
-	using T = EkfModel::EKF;
 
 	T::PoseVec x{};
 	T::PoseMat COV{};

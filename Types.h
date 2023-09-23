@@ -5,6 +5,10 @@
 #include <string>
 #include <cmath>
 
+constexpr int POSE_SIZE = 5;
+constexpr int SENSOR_SIZE = 3;
+constexpr int VISION_SIZE = 3;
+constexpr int CONTROL_SIZE = 2;
 
 template <typename T>
 inline std::string str(const T& x) {
@@ -20,7 +24,7 @@ struct Pose {
 	float v;
 	float w;
 
-	explicit Pose(const Eigen::Matrix<float, 5, 1> &pose_vec) :
+	explicit Pose(const Eigen::Matrix<float, POSE_SIZE, 1> &pose_vec) :
 			x(pose_vec(0, 0)),
 			y(pose_vec(1, 0)),
 			theta(pose_vec(2, 0)),
@@ -32,8 +36,8 @@ struct Pose {
 
 	Pose() : x(0), y(0), theta(0), v(0), w(0) {}
 
-	Eigen::Matrix<float, 5, 1> to_vec() {
-		Eigen::Matrix<float, 5, 1> vec;
+	Eigen::Matrix<float, POSE_SIZE, 1> to_vec() {
+		Eigen::Matrix<float, POSE_SIZE, 1> vec;
 		vec(0, 0) = x;
 		vec(1, 0) = y;
 		vec(2, 0) = theta;
@@ -53,15 +57,15 @@ struct Controls {
 	float lin_accel;
 	float ang_accel;
 
-	explicit Controls(Eigen::Matrix<float, 2, 1> control_vec) :
+	explicit Controls(Eigen::Matrix<float, CONTROL_SIZE, 1> control_vec) :
 			lin_accel(control_vec(0, 0)),
 			ang_accel(control_vec(1, 0)) {}
 
 	Controls(float lin_accel, float ang_accel) :
 			lin_accel(lin_accel), ang_accel(ang_accel) {}
 
-	Eigen::Matrix<float, 2, 1> to_vec() {
-		Eigen::Matrix<float, 2, 1> vec;
+	Eigen::Matrix<float, CONTROL_SIZE, 1> to_vec() {
+		Eigen::Matrix<float, CONTROL_SIZE, 1> vec;
 		vec(0, 0) = lin_accel;
 		vec(1, 0) = ang_accel;
 		return vec;
@@ -80,8 +84,8 @@ struct SensorData {
 
 	SensorData() : gyro_w(0), vel_left(0), vel_right(0) {}
 
-	Eigen::Matrix<float, 3, 1> to_vec() {
-		Eigen::Matrix<float, 3, 1> vec;
+	Eigen::Matrix<float, SENSOR_SIZE, 1> to_vec() {
+		Eigen::Matrix<float, SENSOR_SIZE, 1> vec;
 		vec(0, 0) = gyro_w;
 		vec(1, 0) = vel_left;
 		vec(2, 0) = vel_right;
@@ -99,8 +103,8 @@ struct VisionData {
 	VisionData(float x, float y, float theta) :
 			x(x), y(y), theta(theta) {}
 
-	Eigen::Matrix<float, 3, 1> to_vec() {
-		Eigen::Matrix<float, 3, 1> vec;
+	Eigen::Matrix<float, VISION_SIZE, 1> to_vec() {
+		Eigen::Matrix<float, VISION_SIZE, 1> vec;
 		vec(0, 0) = x;
 		vec(1, 0) = y;
 		vec(2, 0) = theta;
@@ -108,8 +112,8 @@ struct VisionData {
 	}
 };
 
-template<int POSE_SIZE, int SENSOR_SIZE, int VISION_SIZE, int CONTROL_SIZE>
-class EKFTypes {
+// Matrices used in UKF
+class T {
 	public:
 	template<int x, int y> using Matrix = Eigen::Matrix<float, x, y>;
 	using PoseVec = Matrix<POSE_SIZE, 1>;

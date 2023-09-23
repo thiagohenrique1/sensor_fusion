@@ -1,9 +1,7 @@
 #include "EkfModel.h"
 
-using EKF = EkfModel::EKF;
-
-EKF::PoseVec EkfModel::prediction(const EKF::PoseVec &prev_x,
-								  const EKF::ControlVec &controls, float time) {
+T::PoseVec EkfModel::prediction(const T::PoseVec &prev_x,
+								  const T::ControlVec &controls, float time) {
 	Pose pose(prev_x);
 	Controls c(controls);
 	Pose pred;
@@ -33,14 +31,14 @@ void EkfModel::process_noise(float time) {
 	R(4, 4) = time * 0.0001f;
 }
 
-EKF::SensorVec EkfModel::sensor_measurement_error(const EKF::PoseVec &x, const EKF::SensorVec &z) {
+T::SensorVec EkfModel::sensor_measurement_error(const T::PoseVec &x, const T::SensorVec &z) {
 	auto pred_z = sensor_measurement_model(x);
-	EKF::SensorVec z_error = z - pred_z;
+	T::SensorVec z_error = z - pred_z;
 	return z_error;
 }
 
-EKF::SensorVec EkfModel::sensor_measurement_model(const EKF::PoseVec &x) {
-	EKF::SensorVec z;
+T::SensorVec EkfModel::sensor_measurement_model(const T::PoseVec &x) {
+	T::SensorVec z;
 	z(0,0) = x(4,0);
 	float v_increment = x(4,0) * ROBOT_SIZE/2;
 	z(1,0) = x(3,0) - v_increment;
@@ -48,15 +46,15 @@ EKF::SensorVec EkfModel::sensor_measurement_model(const EKF::PoseVec &x) {
 	return z;
 }
 
-EKF::VisionVec EkfModel::vision_measurement_error(const EKF::PoseVec &x, const EKF::VisionVec &z) {
+T::VisionVec EkfModel::vision_measurement_error(const T::PoseVec &x, const T::VisionVec &z) {
 	auto pred_z = vision_measurement_model(x);
-	EKF::VisionVec error = z - pred_z;
+	T::VisionVec error = z - pred_z;
 	error(2,0) = wrap(error(2,0));
 	return error;
 }
 
-EKF::VisionVec EkfModel::vision_measurement_model(const EKF::PoseVec &x) {
-	EKF::VisionVec z;
+T::VisionVec EkfModel::vision_measurement_model(const T::PoseVec &x) {
+	T::VisionVec z;
 	for (int i = 0; i < 2; ++i) {
 		z(i,0) = x(i,0);
 	}

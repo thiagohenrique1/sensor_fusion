@@ -10,24 +10,23 @@ class EkfModel {
 	void process_noise(float time);
 
 	public:
-	using EKF = EKFTypes<5, 3, 3, 2>;
 
 //	EKF::PoseMat F;
-	EKF::PoseMat R;
+	T::PoseMat R;
 
 //	EKF::HSensorMat H;
-	EKF::SensorMat Q;
+	T::SensorMat Q;
 
 //	EKF::HVisionMat Hv;
-	EKF::VisionMat Qv;
+	T::VisionMat Qv;
 
 	EkfModel();
-	EKF::PoseVec prediction(const EKF::PoseVec &prev_x,
-							const EKF::ControlVec &controls, float time);
-	EKF::SensorVec sensor_measurement_error(const EKF::PoseVec &x, const EKF::SensorVec &z);
-	EKF::SensorVec sensor_measurement_model(const EKF::PoseVec &x);
-	EKF::VisionVec vision_measurement_error(const EKF::PoseVec &x, const EKF::VisionVec &z);
-	EKF::VisionVec vision_measurement_model(const EKF::PoseVec &x);
+	T::PoseVec prediction(const T::PoseVec &prev_x,
+							const T::ControlVec &controls, float time);
+	T::SensorVec sensor_measurement_error(const T::PoseVec &x, const T::SensorVec &z);
+	T::SensorVec sensor_measurement_model(const T::PoseVec &x);
+	T::VisionVec vision_measurement_error(const T::PoseVec &x, const T::VisionVec &z);
+	T::VisionVec vision_measurement_model(const T::PoseVec &x);
 	void use_encoders(bool use);
 };
 

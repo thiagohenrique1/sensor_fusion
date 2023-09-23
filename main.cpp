@@ -193,14 +193,14 @@ int main() {
         float wheel_lin_vel = (data[i].wheel_vel[0] + data[i].wheel_vel[1]) / 2;
         float wheel_accel = (wheel_lin_vel - prev_wheel_lin_vel) / dt;
 
-        UKF::T::ControlVec controls {
+        T::ControlVec controls {
             wheel_accel,
             gyro_ang_accel
         };
 
         ukf.predict(controls, dt);
 
-        UKF::T::SensorVec sensor_data {
+        T::SensorVec sensor_data {
             data[i].gyro[2],
             data[i].wheel_vel[0],
             data[i].wheel_vel[1]
