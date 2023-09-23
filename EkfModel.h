@@ -10,7 +10,7 @@ class EkfModel {
 	void process_noise(float time);
 
 	public:
-	using EKF = EKFTypes<6, 4, 4, 2>;
+	using EKF = EKFTypes<5, 3, 3, 2>;
 
 //	EKF::PoseMat F;
 	EKF::PoseMat R;
@@ -28,7 +28,6 @@ class EkfModel {
 	EKF::SensorVec sensor_measurement_model(const EKF::PoseVec &x);
 	EKF::VisionVec vision_measurement_error(const EKF::PoseVec &x, const EKF::VisionVec &z);
 	EKF::VisionVec vision_measurement_model(const EKF::PoseVec &x);
-	void use_magnetometer(bool use);
 	void use_encoders(bool use);
 };
 

@@ -44,7 +44,6 @@ void UKF::predict(const T::ControlVec &controls, float time) {
 	}
 //		Update pose and covariance
 	x_predicted(2, 0) = wrap(x_predicted(2, 0));
-	x_predicted(5, 0) = wrap(x_predicted(5, 0));
 	x = x_predicted;
 	COV = COV_predicted + model.R;
 }
@@ -75,7 +74,7 @@ void UKF::update_on_sensor_data(const T::SensorVec &data) {
 //		Update pose and covariance
 	T::KSensorMat K_GAIN = COV_XY * COV_YY.inverse();
 	T::SensorVec error = data - y_predicted;
-	error(0, 0) = wrap(error(0, 0));
+	// error(0, 0) = wrap(error(0, 0));
 //		error(0, 0) = 0;
 //		error(2, 0) = 0;
 //		error(3, 0) = 0;

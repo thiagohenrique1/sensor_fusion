@@ -20,7 +20,7 @@ class UKF {
 
 	static constexpr float alpha = 1.5;
 	static constexpr float k = 0;
-	static constexpr int L = 6;
+	static constexpr int L = 5;
 
 	static constexpr float lambda = std::pow(alpha, 2.0f) * (L + k) - L;
 	static constexpr float weight0_m = lambda / (L + lambda);

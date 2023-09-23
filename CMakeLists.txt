@@ -17,4 +17,7 @@ add_executable(sensor_fusion main.cpp
     Types.h
 )
 
+# build with O3
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+
 target_link_libraries(sensor_fusion Eigen3::Eigen)

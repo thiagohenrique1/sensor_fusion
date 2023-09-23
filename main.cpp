@@ -5,6 +5,7 @@
 #include<string>
 #include<filesystem>
 #include<iomanip>
+#include<chrono>
 
 #include<UKF.h>
 
@@ -170,11 +171,18 @@ void print_data(std::vector<Data> data) {
 }
 
 int main() {
+    // output file
+    std::ofstream output("output.csv");
+
+
     std::vector<Data> data = read_and_adjust_gyro("circular.csv");
+    // std::vector<Data> data = read_and_adjust_gyro("back_and_forth.csv");
 
     // using 2d model of robot
     UKF ukf;
 
+    // measure time
+    auto start = std::chrono::high_resolution_clock::now();
     for (int i = 1; i < data.size(); i++) {
         double dt = data[i].time - data[i - 1].time;
 
@@ -185,7 +193,6 @@ int main() {
         float wheel_lin_vel = (data[i].wheel_vel[0] + data[i].wheel_vel[1]) / 2;
         float wheel_accel = (wheel_lin_vel - prev_wheel_lin_vel) / dt;
 
-        
         UKF::T::ControlVec controls {
             wheel_accel,
             gyro_ang_accel
@@ -194,7 +201,6 @@ int main() {
         ukf.predict(controls, dt);
 
         UKF::T::SensorVec sensor_data {
-            data[i].mag[2],
             data[i].gyro[2],
             data[i].wheel_vel[0],
             data[i].wheel_vel[1]
@@ -202,9 +208,15 @@ int main() {
 
         ukf.update_on_sensor_data(sensor_data);
 
-        // print ukf orientation in z
-        std::cout << ukf.x(2, 0) << std::endl;
+        // output ukf state
+        output << data[i].time;
+        for (int j = 0; j < ukf.x.rows(); j++) {
+            output << "," << ukf.x(j, 0);
+        }
+        output << std::endl;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << "time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
     //  print orientation from gyro
     // Eigen::Quaterniond q = Eigen::Quaterniond::Identity();
